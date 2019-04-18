@@ -1,11 +1,11 @@
 {
-  "name": "File-upload",
-  "version": "1.0.0",
+  "name": "Dreammy_API",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "Aayush",
   "license": "ISC",
@@ -19,6 +19,6 @@
   "devDependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.11"
   }
 }
