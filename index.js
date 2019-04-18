@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require("body-parser"); //post request
 const urlencodedParser = bodyParser.urlencoded({extended: false});
-const port =  process.env.PORT || 3009;
+const port =  process.env.PORT || 3007;
 const app = express();
 const utils = require('./utils');
 
@@ -40,7 +40,7 @@ app.post('/signup', async (req, res, next) => {
 
 app.post('/login', async (req, res, next) => {
   try {
-    let user = await userModel.findOne({email: req.body.email});
+    let user = await userModel.findOne({email: req.body.email}).sort({createdAt: 1});
     if (!user)
       return next("user with email doesn't exist");
 
@@ -154,8 +154,6 @@ app.use(function(error, req, res, next) {
   console.log(error);
   res.send({success: false, message: error.message || error });
 });
-
-
 
 app.listen(port, ()=>{console.log(`Server Running on Port:${port}.`); });
 

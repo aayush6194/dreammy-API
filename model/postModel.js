@@ -45,6 +45,7 @@ schema.statics.getPostsOfUser = function(id) {
 
 function getPostsHelper (query) {
   return this.find(query)
+  .populate("userId", "firstName lastName email imageUrl")
   .populate("comments.userId", "firstName lastName email imageUrl")
   .sort({_id: -1})
   .then(posts => {
