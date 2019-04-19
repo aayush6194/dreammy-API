@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, email, authtoken, Accept");
+       res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
 });
 
@@ -122,6 +123,30 @@ app.put('/posts/:id/comments', async (req, res, next) => {
     post.comments.push(comment);
     await post.save();
     res.send({ success: true });
+  }
+  catch(err) {
+    next(err);
+  }
+});
+
+
+// { text: "" }
+app.put('/comment', async (req, res, next) => {
+  try {
+    console.log(req)
+     let post = await postModel.findOne({_id:  req.body._id});
+     if (!post)
+      return next("not found");
+
+     let comment = {
+       text: req.body.text,
+       userId: req.user._id,
+       createdAt: new Date()
+   };
+
+     post.comments.push(comment);
+     await post.save();
+     await res.send({ success: true });
   }
   catch(err) {
     next(err);
