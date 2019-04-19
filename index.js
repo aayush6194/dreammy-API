@@ -25,7 +25,6 @@ app.post('/signup', async (req, res, next) => {
     let user = new userModel(req.body);
     await user.save();
     user = await userModel.findOne({_id: user._id});
-
     //there is always one token when user is
     //created for the first time
     let token = user.tokens[0].identifier;
@@ -149,6 +148,14 @@ app.put('/posts/:id/image', async (req, res, next) => {
 app.put('/posts/:id/likes', async (req, res, next) => {
   //todo
 });
+
+// { }
+app.post('/change/', async (req, res, next) => {
+  //todo
+  console.log(req);
+});
+
+
 
 app.use(function(error, req, res, next) {
   console.log(error);
