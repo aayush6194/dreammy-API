@@ -27,14 +27,25 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/signup', async (req, res, next) => {
+  const {firstName, lastName, password, email} = req.body;
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   try {
+    if(!firstName || !lastName || firstName.length < 3 || lastName.length < 3)
+      res.send({success: false, message: "First and Last Name Should be 3 character Long" });
+
+    if(!password || password < 5 )
+        res.send({success: false, message: "Password Must be 5 Character Long" });
+
+      if(!email || !emailRegex.test(String(email).toLowerCase())){
+          res.send({success: false, message: "Invalid Email" });
+      }
+
     let user = new userModel(req.body);
     await user.save();
     user = await userModel.findOne({_id: user._id});
     //there is always one token when user is
     //created for the first time
     let token = user.tokens[0].identifier;
-
     user = user.toJson();
     res.send({success: true, user: user, token });
   }
