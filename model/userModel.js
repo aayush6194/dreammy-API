@@ -11,7 +11,7 @@ let schema = new Schema({
     }],
     default: []
   },
-  imageUrl: {type: String, default: "https://res.cloudinary.com/danu5qwvx/image/upload/v1555552703/rstogtpgpbghak4wdlxu.png"},
+  imageUrl: {type: String, default: "v1555552703/rstogtpgpbghak4wdlxu.png"},
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, unique: true },

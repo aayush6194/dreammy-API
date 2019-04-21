@@ -27,15 +27,16 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/signup', async (req, res, next) => {
+  console.log("signup")
   const {firstName, lastName, password, email} = req.body;
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   try {
-    if(!firstName || !lastName || firstName.length < 3 || lastName.length < 3)
-      res.send({success: false, message: "First and Last Name Should be 3 character Long" });
+    if(!firstName || !lastName || firstName.length < 3 || lastName.length < 3){
+     res.send({success: false, message: "First and Last Name Should be 3 character Long" });}
 
-    if(!password || password < 5 )
+    if(!password || password < 5 ){
         res.send({success: false, message: "Password Must be 5 Character Long" });
-
+      }
       if(!email || !emailRegex.test(String(email).toLowerCase())){
           res.send({success: false, message: "Invalid Email" });
       }
