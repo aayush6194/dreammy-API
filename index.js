@@ -117,33 +117,10 @@ app.get('/posts/all', async (req, res, next) => {
   }
 });
 
-
 app.post('/posts', async (req, res, next) => {
   req.body.userId = req.user._id;
   await new postModel(req.body).save();
   res.send({success: true});
-});
-
-// { text: "" }
-app.put('/posts/:id/comments', async (req, res, next) => {
-  try {
-    let post = await postModel.findOne({_id: req.params.id});
-    if (!post)
-      return next("not found");
-
-    let comment = {
-      text: req.body.text,
-      userId: req.user._id,
-      createdAt: new Date()
-    };
-
-    post.comments.push(comment);
-    await post.save();
-    res.send({ success: true });
-  }
-  catch(err) {
-    next(err);
-  }
 });
 
 
@@ -194,11 +171,11 @@ app.put('/posts/:id/likes', async (req, res, next) => {
 // { }
 app.post('/change', async (req, res, next) => {
 
-let {firstName, lastName, imageUrl, email} = req.body;
+let {firstName, lastName, imageUrl, email, _id} = req.body;
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 try {
 
- let data = await userModel.updateOne({_id: "5cbbbc83eb60b70024f1b78f"},  {$set: {firstName, lastName, imageUrl, email}},  {upsert: true})
+ let data = await userModel.updateOne({_id: _id },  {$set: {firstName, lastName, imageUrl, email}},  {upsert: true})
       .catch((err) => {console.log(err)});
  res.send({success: true})
 } catch(err){
