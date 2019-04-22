@@ -23,7 +23,7 @@ app.use(function(req, res, next) {
 let { userModel, postModel } = require('./model');
 
 app.get('/', (req, res, next) => {
-    res.send({active: true});
+    res.send({active: true, updatedOn: new Date()});
 });
 
 app.post('/signup', async (req, res, next) => {
