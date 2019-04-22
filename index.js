@@ -41,14 +41,14 @@ app.post('/signup', async (req, res, next) => {
           res.send({success: false, message: "Invalid Email" });
       }
 
-    let user = new userModel(req.body);
+    let user = await new userModel(req.body);
     await user.save();
     user = await userModel.findOne({_id: user._id});
     //there is always one token when user is
     //created for the first time
-    let token = user.tokens[0].identifier;
-    user = user.toJson();
-    res.send({success: true, user: user, token });
+    let token = await user.tokens[0].identifier;
+    user = await user.toJson();
+    await res.send({success: true, user: user, token });
   }
   catch(err) {
     next(err);
@@ -192,9 +192,18 @@ app.put('/posts/:id/likes', async (req, res, next) => {
 });
 
 // { }
-app.post('/change/', async (req, res, next) => {
-  //todo
-  console.log(req);
+app.post('/change', async (req, res, next) => {
+
+let {firstName, lastName, imageUrl, email} = req.body;
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+try {
+
+ let data = await userModel.updateOne({_id: "5cbbbc83eb60b70024f1b78f"},  {$set: {firstName, lastName, imageUrl, email}},  {upsert: true})
+      .catch((err) => {console.log(err)});
+ res.send({success: true})
+} catch(err){
+  next(err);
+}
 });
 
 

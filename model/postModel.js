@@ -24,7 +24,8 @@ let schema = new Schema({
   imageUrl: [String],
   videoUrl: [String],
   createdAt: Date,
-  deletedAt: Date
+  deletedAt: Date,
+  category: String
 });
 
 schema.pre('save', function(next) {
