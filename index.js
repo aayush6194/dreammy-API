@@ -117,6 +117,40 @@ app.get('/posts/all', async (req, res, next) => {
   }
 });
 
+//this returns all posts ... friends later
+app.post('/posts/user', async (req, res, next) => {
+  try {
+    let data =await postModel.getPostsOfUser(req.body._id);
+    await res.send({success: true, data: data});
+
+  }
+  catch(err) {
+    next(err);
+  }
+});
+
+//this returns all posts ... friends later
+app.post('/details', async (req, res, next) => {
+  try {
+    let data =await await userModel.findOne({_id: req.body._id}).sort({createdAt: 1});
+
+    if(data != null){
+      data = data.toObject()
+      delete data.tokens;
+      delete data.password;
+      delete data.email;
+      res.send({success: true, data})
+    }
+   else {
+     res.send({success: false})
+   }
+  }
+  catch(err) {
+    next(err);
+  }
+});
+
+
 app.post('/posts', async (req, res, next) => {
   req.body.userId = req.user._id;
   await new postModel(req.body).save();
