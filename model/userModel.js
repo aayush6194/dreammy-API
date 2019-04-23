@@ -23,10 +23,10 @@ let schema = new Schema({
     street: String,
     zipcode: String
   },
-  job: {
-    site: String,
-    name: String
-  },
+  facebook: String,
+  instagram: String,
+  twitter: String,
+  job: String,
   dob: String,
   createdAt: String
 })

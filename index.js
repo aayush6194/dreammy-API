@@ -40,8 +40,8 @@ app.post('/signup', async (req, res, next) => {
       if(!email || !emailRegex.test(String(email).toLowerCase())){
           res.send({success: false, message: "Invalid Email" });
       }
-      if(firstName.length > 31 && email.length > 31 && lastName.length > 31 ){
-          res.send({success: false, message: "31 is character limit" });
+      if(firstName.length > 31 || email.length > 31 || lastName.length > 31 ){
+          res.send({success: false, message: "31 is the Character Limit" });
       }
 
     let user = await new userModel(req.body);
@@ -93,8 +93,12 @@ app.use(async function(req, res, next){
   }
 });
 
-app.get('/check-token',  (req, res) => {
-  res.send({success: true});
+app.get('/check-token', async (req, res) => {
+
+  let user =await userModel.findOne({email: req.headers.email});
+  user = user.toObject()
+  delete user.password;
+  res.send({success: true, user: user});
 });
 
 
@@ -208,13 +212,14 @@ app.put('/posts/:id/likes', async (req, res, next) => {
 // { }
 app.post('/change', async (req, res, next) => {
 
-let {firstName, lastName, imageUrl, email, _id} = req.body;
+let {firstName, lastName, imageUrl, email, _id, facebook, twitter, instagram, work} = req.body;
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 try {
 
- let data = await userModel.updateOne({_id: _id },  {$set: {firstName, lastName, imageUrl, email}},  {upsert: true})
-      .catch((err) => {console.log(err)});
- res.send({success: true})
+ let data = await userModel.updateOne({_id: _id },  {$set: {firstName, lastName, imageUrl, email, facebook, twitter, instagram, work}},  {upsert: true})
+      .then(r =>(res.send({success: true})))
+      .catch((err) => {console.log(err),  res.send({success: false})});
+
 } catch(err){
   next(err);
 }
