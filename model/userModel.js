@@ -26,7 +26,8 @@ let schema = new Schema({
   facebook: String,
   instagram: String,
   twitter: String,
-  job: String,
+  work: String,
+  country: String,
   dob: String,
   createdAt: String
 })
