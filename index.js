@@ -35,10 +35,13 @@ app.post('/signup', async (req, res, next) => {
      res.send({success: false, message: "First and Last Name Should be 3 character Long" });}
 
     if(!password || password < 5 ){
-        res.send({success: false, message: "Password Must be 5 Character Long" });
+        res.send({success: false, message: "Password Must be 5 Characters or Longer" });
       }
       if(!email || !emailRegex.test(String(email).toLowerCase())){
           res.send({success: false, message: "Invalid Email" });
+      }
+      if(firstName.length > 31 && email.length > 31 && lastName.length > 31 ){
+          res.send({success: false, message: "31 is character limit" });
       }
 
     let user = await new userModel(req.body);
