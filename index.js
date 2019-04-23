@@ -98,6 +98,7 @@ app.get('/check-token', async (req, res) => {
   let user =await userModel.findOne({email: req.headers.email});
   user = user.toObject()
   delete user.password;
+  delete user.tokens;
   res.send({success: true, user: user});
 });
 
