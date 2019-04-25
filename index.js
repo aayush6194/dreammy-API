@@ -125,6 +125,8 @@ app.get('/posts/all', async (req, res, next) => {
   }
 });
 
+
+
 //this returns all posts ... friends later
 app.post('/posts/user', async (req, res, next) => {
   try {
@@ -205,7 +207,73 @@ app.put('/posts/:id/image', async (req, res, next) => {
   }
 });
 
-// { }
+
+app.put('/save-post', async (req, res, next) => {
+  try {
+    let data = await  userModel.findOne({email: req.headers.email});
+    let posts = await data.savedPosts;
+
+
+  function objectChecker(posts,_id){
+              posts.map((post)=>{
+                        if(post._id.valueOf() === _id.valueOf())
+                          return true;
+                      console.log(post._id );
+                    });
+
+                    return false;
+                  }
+
+    let alreadySaved = objectChecker(posts, req.body._id);
+
+
+  if(!alreadySaved){
+      posts = [...posts, {_id: req.body._id}];
+
+     await userModel.updateOne({email: req.headers.email},  {$set: {savedPosts: posts}},  {upsert: true})
+         .then(r =>(res.send({success: true})))
+         .catch((err) => {console.log(err),  res.send({success: false})});
+    }else{
+      res.send({success: false, message: "Already Saved!"});
+      }
+    }
+    catch(err) {
+      next(err);
+    }
+});
+
+
+app.get('/saved-posts', async (req, res, next) => {
+  try {
+   let data = await  userModel.findOne({email: req.headers.email});
+   let posts = await data.savedPosts;
+   let postsToSend = [];
+
+  //   await posts.map(async (post)=>{
+  //      await postModel.findOne({_id: post._id}).then( async ress=> {
+  //      await postsToSend.push(ress);
+  //          res.send({success: true, data: postsToSend});
+  //     })
+  //   });
+  // }
+
+  // await posts.map(async (post)=>{
+  //    let temp = await postModel.getPost({_id: post._id});
+  //     postsToSend.push(temp);
+  //   })
+    let temp =  await postModel.getPost({_id: posts[0]._id});
+    temp =  await postModel.getSavedPosts(posts);
+    await   res.send({success: true, data: temp});
+
+}
+
+
+  catch(err) {
+    next(err);
+  }
+});
+
+
 app.put('/posts/:id/likes', async (req, res, next) => {
   //todo
 });

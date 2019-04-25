@@ -44,6 +44,39 @@ schema.statics.getPostsOfUser = function(id) {
   return getPostsHelper.bind(this)({ userId: id });
 }
 
+schema.statics.getPost = function(id) {
+  //find by id query
+  return getPostsHelper.bind(this)({ _id: id });
+}
+
+
+schema.statics.getSavedPosts = async function(posts) {
+
+
+
+  //
+  // let postsToSend = [];
+  // return await posts.map(async (post)=>
+  //   {
+  //     await getPostsHelper.bind(this)({ _id: post._id })
+  //   }
+  // )
+
+  let postsToSend = [];
+
+
+  for(let i = 0; i < posts.length; i++){
+        let temp = await getPostsHelper.bind(this)({ _id: posts[i]._id });
+        await postsToSend.push(temp[0]);
+        console.log(temp)
+    }
+  return Promise.all(postsToSend);
+
+
+
+}
+
+
 function getPostsHelper (query) {
   return this.find(query)
   .populate("userId", "firstName lastName email imageUrl")

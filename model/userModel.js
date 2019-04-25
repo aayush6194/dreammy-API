@@ -29,6 +29,7 @@ let schema = new Schema({
   work: String,
   country: String,
   dob: String,
+  savedPosts: [{_id:String}],
   createdAt: String
 })
 
@@ -39,7 +40,6 @@ schema.pre('save', function(next) {
     this.createdAt = new Date();
     this.tokens.push(utils.createToken());
   }
-
   next();
 });
 
