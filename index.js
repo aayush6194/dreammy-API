@@ -163,6 +163,11 @@ app.post('/details', async (req, res, next) => {
 
 app.post('/posts', async (req, res, next) => {
   req.body.userId = req.user._id;
+
+  let {videoUrl, imageUrl, caption} = req.body;
+
+  console.log(caption);
+
   await new postModel(req.body).save();
   res.send({success: true});
 });
@@ -180,7 +185,7 @@ app.put('/comment', async (req, res, next) => {
        text: req.body.text,
        userId: req.user._id,
        createdAt: new Date()
-   };
+    };
 
      post.comments.push(comment);
      await post.save();
@@ -207,12 +212,10 @@ app.put('/posts/:id/image', async (req, res, next) => {
   }
 });
 
-
 app.put('/save-post', async (req, res, next) => {
   try {
     let data = await  userModel.findOne({email: req.headers.email});
     let posts = await data.savedPosts;
-
 
   function objectChecker(posts,_id){
               posts.map((post)=>{
@@ -220,12 +223,9 @@ app.put('/save-post', async (req, res, next) => {
                           return true;
                       console.log(post._id );
                     });
-
                     return false;
                   }
-
     let alreadySaved = objectChecker(posts, req.body._id);
-
 
   if(!alreadySaved){
       posts = [...posts, {_id: req.body._id}];
@@ -248,31 +248,31 @@ app.get('/saved-posts', async (req, res, next) => {
    let data = await  userModel.findOne({email: req.headers.email});
    let posts = await data.savedPosts;
    let postsToSend = [];
-
-  //   await posts.map(async (post)=>{
-  //      await postModel.findOne({_id: post._id}).then( async ress=> {
-  //      await postsToSend.push(ress);
-  //          res.send({success: true, data: postsToSend});
-  //     })
-  //   });
-  // }
-
-  // await posts.map(async (post)=>{
-  //    let temp = await postModel.getPost({_id: post._id});
-  //     postsToSend.push(temp);
-  //   })
     let temp =  await postModel.getPost({_id: posts[0]._id});
     temp =  await postModel.getSavedPosts(posts);
     await   res.send({success: true, data: temp});
 
 }
-
-
   catch(err) {
     next(err);
   }
 });
 
+
+app.put('/delete-post', async (req, res, next) => {
+  try {
+  //  _id: req.headers.email
+    let user = await  userModel.findOne({email: req.headers.email});
+    let userId = await user._id;
+    let data = await  postModel.remove({_id: req.body._id, userId: userId});
+    let hasPost = await  postModel.count({_id: req.body._id});
+
+    res.send({success: hasPost == 0, message: "Post Could not be Deleted"});
+    }
+    catch(err) {
+      next(err);
+    }
+});
 
 app.put('/posts/:id/likes', async (req, res, next) => {
   //todo
