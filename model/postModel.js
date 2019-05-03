@@ -23,6 +23,7 @@ let schema = new Schema({
   }],
   imageUrl: [String],
   videoUrl: [String],
+  visibility:  { type: String, required: true },
   createdAt: Date,
   deletedAt: Date,
   category: String
@@ -36,7 +37,7 @@ schema.pre('save', function(next) {
 
 schema.statics.getPosts = function() {
   //find all query
-  return getPostsHelper.bind(this)({});
+  return getPostsHelper.bind(this)({visibility: "public"});
 }
 
 schema.statics.getPostsOfUser = function(id) {

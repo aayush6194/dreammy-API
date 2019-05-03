@@ -4,7 +4,7 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 const port =  process.env.PORT || 3007;
 const app = express();
 const utils = require('./utils');
-
+const adminEmail = "michelegrande";
 /**
  * todo: logout, likes, friends
  */const cors = require('cors');
@@ -114,7 +114,7 @@ app.get('/posts', async (req, res, next) => {
   }
 });
 
-//this returns all posts ... friends later
+
 app.get('/posts/all', async (req, res, next) => {
   try {
     let data = await postModel.getPosts();
@@ -132,7 +132,6 @@ app.post('/posts/user', async (req, res, next) => {
   try {
     let data =await postModel.getPostsOfUser(req.body._id);
     await res.send({success: true, data: data});
-
   }
   catch(err) {
     next(err);
@@ -163,13 +162,15 @@ app.post('/details', async (req, res, next) => {
 
 app.post('/posts', async (req, res, next) => {
   req.body.userId = req.user._id;
-
-  let {videoUrl, imageUrl, caption} = req.body;
-
-  console.log(caption);
+  let {videoUrl, imageUrl, caption, visibility} = req.body;
+  visibility = visibility=== undefined || visibility === null? "private" : visibility.toLowerCase();
 
   await new postModel(req.body).save();
-  res.send({success: true});
+  if(visibility === "public")
+      res.send({success: true, modal: false});
+  else {
+    res.send({success: true, modal: true});
+  }
 });
 
 
