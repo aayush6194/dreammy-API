@@ -286,9 +286,14 @@ let {firstName, lastName, imageUrl, email, _id, facebook, twitter, instagram, wo
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 try {
 
- let data = await userModel.updateOne({_id: _id },  {$set: {firstName, lastName, imageUrl, email, facebook, twitter, instagram, work}},  {upsert: true})
+
+  if(!firstName || !lastName || firstName.length < 3 || lastName.length < 3){
+   res.send({success: false, message: "First and Last Name Should be 3 character Long" });}
+   else{
+ let data = await userModel.updateOne({_id: _id },  {$set: {firstName, lastName, imageUrl, facebook, twitter, instagram, work}},  {upsert: true})
       .then(r =>(res.send({success: true})))
-      .catch((err) => {console.log(err),  res.send({success: false})});
+      .catch((err) => {console.log(err),  res.send({success: false, message: err})});
+    }
 
 } catch(err){
   next(err);
