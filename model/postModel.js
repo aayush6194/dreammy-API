@@ -44,6 +44,10 @@ schema.statics.getPostsOfUser = function(id) {
   //find by id query
   return getPostsHelper.bind(this)({ userId: id });
 }
+schema.statics.getPostsOfOtherUser = function(id) {
+  //find by id query
+  return getPostsHelper.bind(this)({ userId: id, visibility: "public" });
+}
 
 schema.statics.getPost = function(id) {
   //find by id query

@@ -106,7 +106,7 @@ app.get('/check-token', async (req, res) => {
 //this returns my post
 app.get('/posts', async (req, res, next) => {
   try {
-    let data = await postModel.getPostsOfUser(req.user._id);
+    let data = await postModel.getPostsOfOtherUser(req.user._id);
     res.send({success: true, data: data});
   }
   catch(err) {
